@@ -1,0 +1,2772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mortgage Affordability Calculator | ESN Financial Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green:       #0D5C4A;
+    --green-mid:   #1A7A61;
+    --green-light: #D6EFE9;
+    --green-pale:  #EFF8F5;
+    --gold:        #C9A84C;
+    --gold-light:  #F5EDD6;
+    --gold-pale:   #FBF7EE;
+    --white:       #FFFFFF;
+    --off-white:   #F8FAF9;
+    --text-dark:   #1A2E29;
+    --text-mid:    #3D5951;
+    --text-light:  #7A9E96;
+    --border:      #C8E0DA;
+    --shadow:      rgba(13, 92, 74, 0.08);
+    --shadow-md:   rgba(13, 92, 74, 0.14);
+    --radius:      12px;
+    --radius-sm:   8px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--off-white);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--green);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 50%, rgba(201,168,76,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 10% 80%, rgba(26,122,97,0.3) 0%, transparent 50%);
+  }
+  .header-inner {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 36px 32px 40px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .logo-box {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: var(--radius);
+  }
+  .header-text h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1.15;
+    letter-spacing: 0.3px;
+  }
+  .header-text p {
+    font-size: 14px;
+    color: rgba(214,239,233,0.8);
+    margin-top: 6px;
+    font-weight: 300;
+    letter-spacing: 0.2px;
+  }
+  .disclaimer-banner {
+    background: rgba(201,168,76,0.12);
+    border-top: 1px solid rgba(201,168,76,0.2);
+    padding: 10px 32px;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(214,239,233,0.7);
+    letter-spacing: 0.1px;
+  }
+
+  /* ── LAYOUT ── */
+  .page-wrap {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  /* ── PROGRESS STEPS ── */
+  .steps-bar {
+    display: flex;
+    gap: 0;
+    margin-bottom: 32px;
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  .step-item {
+    flex: 1;
+    padding: 14px 10px;
+    text-align: center;
+    cursor: pointer;
+    border-right: 1px solid var(--border);
+    transition: all 0.25s ease;
+    position: relative;
+  }
+  .step-item:last-child { border-right: none; }
+  .step-item:hover { background: var(--green-pale); }
+  .step-item.active { background: var(--green); }
+  .step-item.done { background: var(--green-light); }
+  .step-num {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
+  .step-item.active .step-num { color: var(--gold); }
+  .step-item.done .step-num { color: var(--green-mid); }
+  .step-label {
+    font-size: 12px;
+    color: var(--text-mid);
+    margin-top: 2px;
+    font-weight: 500;
+  }
+  .step-item.active .step-label { color: var(--white); font-weight: 600; }
+  .step-item.done .step-label { color: var(--green); }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 16px var(--shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .card-header {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .card-icon {
+    width: 36px; height: 36px;
+    background: rgba(201,168,76,0.2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .card-header h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.2px;
+  }
+  .card-header p {
+    font-size: 12px;
+    color: rgba(214,239,233,0.75);
+    margin-top: 2px;
+  }
+  .card-body { padding: 28px; }
+
+  /* ── FORM ELEMENTS ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  @media (max-width: 640px) {
+    .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
+  }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-mid);
+  }
+  label .required { color: var(--gold); margin-left: 2px; }
+
+  .input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .prefix, .suffix {
+    position: absolute;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-light);
+    pointer-events: none;
+  }
+  .prefix { left: 14px; }
+  .suffix { right: 14px; }
+  input[type="number"], input[type="text"], select {
+    width: 100%;
+    height: 48px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--off-white);
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    color: var(--text-dark);
+    transition: all 0.2s ease;
+    outline: none;
+    appearance: none;
+  }
+  input[type="number"] { padding: 0 14px 0 28px; }
+  input.no-prefix { padding: 0 14px; }
+  input.with-suffix { padding: 0 40px 0 14px; }
+  select { padding: 0 14px; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A9E96' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+  input:focus, select:focus {
+    border-color: var(--green-mid);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(26,122,97,0.1);
+  }
+  input.error { border-color: #e05; }
+
+  .field-hint {
+    font-size: 11px;
+    color: var(--text-light);
+    line-height: 1.4;
+  }
+
+  /* ── TOGGLE SWITCH ── */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--green-pale);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--green-light);
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+  .toggle-row label { text-transform: none; font-size: 14px; font-weight: 500; color: var(--text-dark); cursor: pointer; letter-spacing: 0; }
+  .toggle-row small { font-size: 12px; color: var(--text-light); display: block; }
+  .switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; inset: 0;
+    background: var(--border);
+    border-radius: 24px;
+    transition: background 0.25s;
+    cursor: pointer;
+  }
+  .slider::before {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    left: 3px; bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.25s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+  input:checked + .slider { background: var(--green); }
+  input:checked + .slider::before { transform: translateX(20px); }
+
+  /* ── SECTION DIVIDER ── */
+  .section-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--green);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin: 24px 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title:first-child { margin-top: 0; }
+  .section-title .dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── COUNTER WIDGET ── */
+  .counter-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 48px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--off-white);
+  }
+  .counter-btn {
+    width: 48px;
+    height: 100%;
+    background: var(--green-light);
+    border: none;
+    font-size: 20px;
+    color: var(--green);
+    cursor: pointer;
+    transition: background 0.2s;
+    font-weight: 300;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .counter-btn:hover { background: var(--green-mid); color: white; }
+  .counter-display {
+    flex: 1;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+    background: var(--white);
+    height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── COMMITMENT ROWS ── */
+  .commitment-list { display: flex; flex-direction: column; gap: 12px; }
+  .commitment-row {
+    display: grid;
+    grid-template-columns: 1fr auto 140px auto;
+    gap: 10px;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--green-pale);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--green-light);
+  }
+  .commitment-label { font-size: 13px; font-weight: 500; color: var(--text-dark); }
+  .commitment-sub { font-size: 11px; color: var(--text-light); margin-top: 1px; }
+  .commitment-amount {
+    display: flex; align-items: center; gap: 0;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    height: 40px;
+    background: white;
+  }
+  .commitment-amount span {
+    padding: 0 10px;
+    font-size: 13px;
+    color: var(--text-light);
+    background: var(--green-light);
+    height: 100%;
+    display: flex; align-items: center;
+    border-right: 1px solid var(--border);
+    font-weight: 600;
+  }
+  .commitment-amount input {
+    width: 100px;
+    height: 100%;
+    border: none;
+    background: transparent;
+    padding: 0 10px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    outline: none;
+  }
+  .remove-btn {
+    width: 32px; height: 32px;
+    border: 1.5px solid var(--border);
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-light);
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+  .remove-btn:hover { background: #fee; border-color: #e05; color: #e05; }
+
+  /* ── INFO BOX ── */
+  .info-box {
+    background: var(--gold-pale);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-size: 12.5px;
+    color: var(--text-mid);
+    line-height: 1.6;
+    display: flex;
+    gap: 10px;
+  }
+  .info-box .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── NAV BUTTONS ── */
+  .nav-row {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 28px;
+  }
+  .btn {
+    height: 48px;
+    padding: 0 28px;
+    border-radius: var(--radius-sm);
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-primary {
+    background: var(--green);
+    color: white;
+    box-shadow: 0 4px 14px rgba(13,92,74,0.3);
+  }
+  .btn-primary:hover { background: var(--green-mid); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(13,92,74,0.35); }
+  .btn-secondary {
+    background: var(--white);
+    color: var(--green);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--green-pale); border-color: var(--green-mid); }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold) 0%, #B8952E 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(201,168,76,0.35);
+    font-size: 15px;
+    padding: 0 36px;
+    height: 52px;
+  }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.4); }
+
+  /* ── RESULTS ── */
+  .results-hidden { display: none; }
+
+  .result-hero {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .result-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 70% 30%, rgba(201,168,76,0.15) 0%, transparent 60%);
+  }
+  .result-hero-label {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(214,239,233,0.7);
+    font-weight: 500;
+    position: relative;
+  }
+  .result-hero-amount {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(44px, 8vw, 68px);
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1.1;
+    margin: 8px 0 4px;
+    position: relative;
+  }
+  .result-hero-sub {
+    font-size: 13px;
+    color: rgba(214,239,233,0.65);
+    position: relative;
+  }
+  .result-hero-range {
+    display: inline-flex;
+    gap: 24px;
+    margin-top: 20px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 12px 24px;
+    position: relative;
+  }
+  .range-item { text-align: center; }
+  .range-label { font-size: 11px; color: rgba(214,239,233,0.6); letter-spacing: 0.5px; text-transform: uppercase; }
+  .range-val { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 600; color: white; }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 600px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .metric-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: 0 2px 10px var(--shadow);
+  }
+  .metric-label {
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .metric-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+  .metric-value.green { color: var(--green); }
+  .metric-value.gold { color: var(--gold); }
+  .metric-value.amber { color: #c97a00; }
+  .metric-sub { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+
+  /* ── LENDER BREAKDOWN ── */
+  .lender-grid { display: flex; flex-direction: column; gap: 10px; }
+  .lender-row {
+    display: grid;
+    grid-template-columns: 140px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .lender-name { font-size: 13px; font-weight: 600; color: var(--text-dark); }
+  .lender-note { font-size: 11px; color: var(--text-light); }
+  .lender-bar-wrap { position: relative; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .lender-bar { height: 100%; background: linear-gradient(90deg, var(--green), var(--green-mid)); border-radius: 4px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+  .lender-amount { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 600; color: var(--green); text-align: right; white-space: nowrap; }
+
+  /* ── STRESS TEST ── */
+  .stress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .stress-row:last-child { border-bottom: none; }
+  .stress-scenario { font-size: 13px; color: var(--text-dark); font-weight: 500; }
+  .stress-rate { font-size: 12px; color: var(--text-light); }
+  .stress-payment { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 600; }
+  .stress-payment.ok { color: var(--green); }
+  .stress-payment.warn { color: #c97a00; }
+  .stress-payment.danger { color: #c0392b; }
+  .stress-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .badge-ok { background: var(--green-light); color: var(--green); }
+  .badge-warn { background: #FFF3CD; color: #856404; }
+  .badge-risk { background: #FDEAEA; color: #c0392b; }
+
+  /* ── AFFORDABILITY BREAKDOWN ── */
+  .breakdown-list { display: flex; flex-direction: column; gap: 0; }
+  .breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .breakdown-item:last-child { border-bottom: none; }
+  .breakdown-item.total {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--green);
+    padding-top: 14px;
+  }
+  .breakdown-item .deduction { color: #c0392b; }
+  .breakdown-item .addition { color: var(--green); }
+
+  /* ── CTA ── */
+  .cta-box {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.15) 0%, transparent 60%);
+  }
+  .cta-box h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--gold);
+    position: relative;
+    margin-bottom: 10px;
+  }
+  .cta-box p {
+    font-size: 14px;
+    color: rgba(214,239,233,0.8);
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .cta-box .btn-gold { position: relative; }
+
+  /* ── LEGAL FOOTER ── */
+  .legal {
+    margin-top: 32px;
+    padding: 20px;
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    font-size: 11.5px;
+    color: var(--text-light);
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeUp 0.4s ease both; }
+
+  /* ── STEP PANELS ── */
+  .step-panel { display: none; }
+  .step-panel.active { display: block; animation: fadeUp 0.35s ease both; }
+
+  /* HIGHLIGHT CHIP */
+  .chip {
+    display: inline-block;
+    background: var(--green-light);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+
+  /* ── OVERPAYMENT / REPAYMENT BREAKDOWN ── */
+  .repay-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  @media(max-width:600px){ .repay-split { grid-template-columns: 1fr; } }
+
+  .donut-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  .donut-svg { position: relative; }
+  .donut-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .donut-center-val {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1;
+  }
+  .donut-center-label {
+    font-size: 11px;
+    color: var(--text-light);
+    text-align: center;
+    margin-top: 3px;
+    font-weight: 500;
+  }
+  .donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .legend-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--off-white);
+  }
+  .legend-dot-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dark);
+  }
+  .legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .legend-val {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+  .legend-pct {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-left: 4px;
+  }
+
+  /* Overpayment card */
+  .op-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .slider-field label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: uppercase;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text-mid);
+    margin-bottom: 10px;
+  }
+  .slider-val {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--green);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--green-light);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--green);
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(13,92,74,0.3);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+  .op-savings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 4px;
+  }
+  @media(max-width:500px){ .op-savings-grid { grid-template-columns: 1fr 1fr; } }
+
+  .op-saving-box {
+    background: var(--green-pale);
+    border: 1px solid var(--green-light);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    text-align: center;
+  }
+  .op-saving-box.highlight {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .op-saving-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+  .op-saving-box.highlight .op-saving-label { color: rgba(214,239,233,0.7); }
+  .op-saving-val {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1;
+  }
+  .op-saving-box.highlight .op-saving-val { color: var(--gold); }
+
+  /* Chart canvas */
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    margin-top: 4px;
+  }
+
+  /* LEAD MAGNET ── */
+  .lead-magnet {
+    position: relative;
+    background: var(--green);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 40px rgba(13,92,74,0.25);
+  }
+  .lead-magnet::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 0% 100%, rgba(201,168,76,0.18) 0%, transparent 50%),
+      radial-gradient(ellipse at 100% 0%, rgba(26,122,97,0.4) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .lead-magnet-badge {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: var(--gold);
+    color: var(--green);
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    z-index: 2;
+  }
+  .lead-magnet-inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    z-index: 1;
+  }
+  @media (max-width: 700px) {
+    .lead-magnet-inner { grid-template-columns: 1fr; }
+  }
+  .lead-left {
+    padding: 44px 36px 44px 40px;
+    border-right: 1px solid rgba(201,168,76,0.15);
+  }
+  .lead-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(20px, 3vw, 27px);
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1.25;
+    margin-bottom: 14px;
+  }
+  .lead-sub {
+    font-size: 13.5px;
+    color: rgba(214,239,233,0.85);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .lead-sub strong { color: var(--gold-light); }
+  .lead-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .lead-bullets li {
+    font-size: 13px;
+    color: rgba(214,239,233,0.9);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .lead-right {
+    padding: 40px 36px 40px 32px;
+    background: rgba(255,255,255,0.04);
+  }
+  .lead-field {
+    margin-bottom: 14px;
+  }
+  .lead-label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: rgba(214,239,233,0.7);
+    margin-bottom: 6px;
+  }
+  .lead-optional {
+    font-weight: 400;
+    text-transform: none;
+    font-size: 11px;
+    opacity: 0.6;
+    letter-spacing: 0;
+  }
+  .lead-input, .lead-select {
+    width: 100%;
+    height: 46px;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(201,168,76,0.25);
+    border-radius: var(--radius-sm);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    padding: 0 14px;
+    outline: none;
+    transition: all 0.2s;
+    appearance: none;
+  }
+  .lead-input::placeholder { color: rgba(255,255,255,0.35); }
+  .lead-input:focus, .lead-select:focus {
+    border-color: var(--gold);
+    background: rgba(255,255,255,0.15);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
+  }
+  .lead-select option { background: var(--green); color: white; }
+  .lead-consent {
+    margin: 16px 0 14px;
+  }
+  .consent-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    cursor: pointer;
+  }
+  .consent-row input[type="checkbox"] {
+    width: 16px; height: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    accent-color: var(--gold);
+    cursor: pointer;
+  }
+  .consent-row span {
+    font-size: 11.5px;
+    color: rgba(214,239,233,0.65);
+    line-height: 1.6;
+  }
+  .lead-error {
+    background: rgba(255,60,60,0.15);
+    border: 1px solid rgba(255,100,100,0.3);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: #ffaaaa;
+    margin-bottom: 12px;
+  }
+  .btn-lead {
+    width: 100%;
+    height: 52px;
+    background: linear-gradient(135deg, var(--gold) 0%, #B8952E 100%);
+    color: var(--green);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+  }
+  .btn-lead:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(201,168,76,0.45);
+  }
+  .btn-lead:active { transform: translateY(0); }
+  .lead-privacy {
+    font-size: 11px;
+    color: rgba(214,239,233,0.45);
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  .lead-success-box {
+    text-align: center;
+    padding: 20px 0;
+  }
+  .lead-success-icon {
+    width: 56px; height: 56px;
+    background: var(--gold);
+    color: var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 auto 16px;
+    animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) both;
+  }
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .lead-success-box h4 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .lead-success-box p {
+    font-size: 13.5px;
+    color: rgba(214,239,233,0.8);
+    line-height: 1.6;
+  }
+
+  /* ── MOBILE OPTIMISATION ── */
+  @media (max-width: 600px) {
+
+    /* Header */
+    .header-inner { padding: 20px 16px 22px; gap: 14px; }
+    .logo-box { width: 52px; height: 52px; }
+    .header-text h1 { font-size: 18px; }
+    .header-text p { font-size: 12px; }
+    .disclaimer-banner { padding: 8px 16px; font-size: 11px; }
+
+    /* Layout */
+    .page-wrap { padding: 16px 12px 40px; }
+
+    /* Steps bar */
+    .steps-bar { border-radius: 8px; }
+    .step-item { padding: 10px 4px; }
+    .step-num { font-size: 9px; letter-spacing: 0.5px; }
+    .step-label { font-size: 10px; }
+
+    /* Cards */
+    .card-header { padding: 14px 16px; gap: 10px; }
+    .card-icon { width: 30px; height: 30px; font-size: 15px; }
+    .card-header h2 { font-size: 16px; }
+    .card-header p { font-size: 11px; }
+    .card-body { padding: 16px; }
+
+    /* Forms */
+    .form-grid, .form-grid-3 { grid-template-columns: 1fr; gap: 14px; }
+    .section-title { font-size: 15px; }
+    .toggle-row { padding: 12px 14px; }
+
+    /* Commitment rows — stack vertically on mobile */
+    .commitment-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .commitment-amount { width: 100%; }
+    .commitment-amount input { width: 100%; }
+
+    /* Results hero */
+    .result-hero { padding: 24px 16px; }
+    .result-hero-amount { font-size: 38px; }
+    .result-hero-range {
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px 16px;
+    }
+    .result-hero-range > div[style] { display: none; }
+
+    /* Metrics */
+    .results-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .metric-card { padding: 14px 12px; }
+    .metric-value { font-size: 20px; }
+    .metric-label { font-size: 10px; }
+
+    /* Lender rows — stack on mobile */
+    .lender-row {
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+    .lender-bar-wrap { display: none; }
+    .lender-name { font-size: 12px; }
+    .lender-note { font-size: 10px; }
+    .lender-amount { font-size: 15px; }
+
+    /* Stress test */
+    .stress-row { flex-wrap: wrap; gap: 6px; }
+    .stress-payment { font-size: 16px; }
+
+    /* Breakdown */
+    .breakdown-item { font-size: 12px; }
+    .breakdown-item.total { font-size: 13px; }
+
+    /* Repayment split */
+    .repay-split { grid-template-columns: 1fr; }
+    .donut-wrap { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+
+    /* Overpayment grid */
+    .op-savings-grid { grid-template-columns: 1fr 1fr; }
+
+    /* Lead magnet */
+    .lead-left { padding: 24px 20px; border-right: none; border-bottom: 1px solid rgba(201,168,76,0.15); }
+    .lead-right { padding: 24px 20px; }
+    .lead-title { font-size: 20px; }
+    .lead-magnet-badge { top: 12px; right: 12px; font-size: 9px; padding: 4px 10px; }
+
+    /* Nav buttons */
+    .nav-row { flex-direction: column-reverse; gap: 8px; }
+    .btn { width: 100%; justify-content: center; }
+    .btn-gold { width: 100%; justify-content: center; }
+
+    /* Legal */
+    .legal { font-size: 10.5px; padding: 14px; }
+  }
+
+  /* Medium screens */
+  @media (max-width: 768px) and (min-width: 601px) {
+    .page-wrap { padding: 20px 16px 50px; }
+    .commitment-row { grid-template-columns: 1fr 140px; }
+    .lender-row { grid-template-columns: 110px 1fr auto; }
+    .result-hero-range { gap: 14px; padding: 10px 16px; }
+  }
+
+  /* TOOLTIP */
+  .tooltip-wrap { position: relative; display: inline-flex; align-items: center; gap: 4px; }
+  .tooltip-icon {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--green-light);
+    color: var(--green);
+    font-size: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: help;
+    font-weight: 700;
+  }
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text-dark);
+    color: white;
+    font-size: 11px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    width: 200px;
+    line-height: 1.5;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .tooltip-wrap:hover .tooltip-text { display: block; }
+</style>
+<script>
+
+// ── STATE ──────────────────────────────────────────────────────────
+const counters = { dep0to4: 0, dep5to11: 0, dep12to17: 0, depAdult: 0 };
+let currentStep = 0;
+
+// ── GATE: go to email capture before results ──────────────────────
+function goToGate() {
+  if (!document.getElementById('salary1').value) {
+    alert('Please enter your salary on Step 1 before calculating.');
+    goTo(0);
+    return;
+  }
+  // Hide all panels, show gate
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel5').classList.add('active');
+  // Mark all steps as done
+  const items = document.querySelectorAll('.step-item');
+  items.forEach((it, i) => {
+    it.classList.remove('active', 'done');
+    if (i < 4) it.classList.add('done');
+    if (i === 4) it.classList.add('active');
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── UNLOCK: validate email, add to Brevo, run calc, show results ──
+function unlockResults() {
+  const name    = document.getElementById('gateName').value.trim();
+  const email   = document.getElementById('gateEmail').value.trim();
+  const consent = document.getElementById('gateConsent').checked;
+  const errEl   = document.getElementById('gateError');
+
+  errEl.style.display = 'none';
+
+  if (!name) { errEl.textContent = 'Please enter your name.'; errEl.style.display = 'block'; return; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEl.textContent = 'Please enter a valid email address.'; errEl.style.display = 'block'; return; }
+  if (!consent) { errEl.textContent = 'Please tick the box to continue.'; errEl.style.display = 'block'; return; }
+
+  // Add to Google Sheet via GET (bypasses CORS)
+  const sheetUrl = 'https://script.google.com/macros/s/AKfycbzFxoSWn4oZmEpvhSK-J26-XRTMRbozQgL8CGYFWTJXRx9pdC-xXELcMeSuERKGIm50kw/exec'
+    + '?name=' + encodeURIComponent(name)
+    + '&email=' + encodeURIComponent(email)
+    + '&source=' + encodeURIComponent('ESN Mortgage Calculator');
+  fetch(sheetUrl).catch(e => console.warn('Sheet error:', e));
+
+  // Store name/email for PDF
+  window._leadName  = name;
+  window._leadEmail = email;
+
+  // Run the full calculation and show results
+  calculate();
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────
+function goTo(step) {
+  const ids = ['panel0','panel1','panel2','panel3','panel5','panel4'];
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  const targetId = step === 4 ? 'panel4' : 'panel' + step;
+  const el = document.getElementById(targetId);
+  if (el) el.classList.add('active');
+  const items = document.querySelectorAll('.step-item');
+  items.forEach((it, i) => {
+    it.classList.remove('active', 'done');
+    if (i < step) it.classList.add('done');
+    if (i === step) it.classList.add('active');
+  });
+  currentStep = step;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── TOGGLE JOINT ──────────────────────────────────────────────────
+function toggleJoint(e) {
+  const cb = document.getElementById('isJoint');
+  if (e && document.querySelector('.toggle-row') === e.currentTarget) cb.checked = !cb.checked;
+  document.getElementById('app2Section').style.display = cb.checked ? 'block' : 'none';
+}
+
+// ── COUNTER ───────────────────────────────────────────────────────
+function adj(key, delta) {
+  counters[key] = Math.max(0, Math.min(10, counters[key] + delta));
+  document.getElementById(key + 'Display').textContent = counters[key];
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────
+const v = id => parseFloat(document.getElementById(id)?.value) || 0;
+const fmt = n => '£' + Math.round(n).toLocaleString('en-GB');
+const fmtK = n => '£' + (Math.round(n / 1000)).toLocaleString('en-GB') + 'k';
+
+function monthlyPayment(principal, annualRate, years) {
+  const r = annualRate / 100 / 12;
+  const n = years * 12;
+  if (r === 0) return principal / n;
+  return principal * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+}
+
+// ── CALCULATE ─────────────────────────────────────────────────────
+function calculate() {
+  // Validate deposit vs property value
+  const depVal = parseFloat(document.getElementById('deposit')?.value) || 0;
+  const propVal = parseFloat(document.getElementById('propValue')?.value) || 0;
+  const depWarn = document.getElementById('depositWarning');
+  if (depWarn) depWarn.style.display = (propVal > 0 && depVal >= propVal) ? 'block' : 'none';
+  if (propVal > 0 && depVal >= propVal) {
+    alert('Your deposit cannot be equal to or greater than the property value. Please check your figures.');
+    return;
+  }
+  const isJoint = document.getElementById('isJoint').checked;
+
+  // Income
+  const sal1 = v('salary1');
+  const bon1 = v('bonus1') * 0.6;
+  const oth1 = v('other1') * 0.75;
+  const sal2 = isJoint ? v('salary2') : 0;
+  const bon2 = isJoint ? v('bonus2') * 0.6 : 0;
+  const oth2 = isJoint ? v('other2') * 0.75 : 0;
+  const grossIncome = sal1 + bon1 + oth1 + sal2 + bon2 + oth2;
+
+  // Child Benefit income offset
+  const childCount = counters.dep0to4 + counters.dep5to11 + counters.dep12to17;
+  const cb1 = childCount >= 1 ? 25.60 * 4.33 : 0;
+  const cbOthers = Math.max(0, childCount - 1) * 16.95 * 4.33;
+  const childBenefitMonthly = cb1 + cbOthers;
+
+  // Net monthly income (approx tax)
+  const netMonthly1 = estimateNetMonthly(sal1 + bon1 + oth1);
+  const netMonthly2 = isJoint ? estimateNetMonthly(sal2 + bon2 + oth2) : 0;
+  const totalNetMonthly = netMonthly1 + netMonthly2 + childBenefitMonthly;
+
+  // Commitments
+  const loans = v('loans');
+  const ccBalance = v('creditcards');
+  const cc = ccBalance * 0.03; // 3% of outstanding balance = monthly commitment used by lenders
+  const car = v('carfinance');
+  const sl = v('studentloan');
+  const other = v('otherloans');
+  const exMortgage = v('existingmortgage');
+  const childcare = v('childcare');
+  const maint = v('maintenance');
+  const school = v('schoolfees');
+  const ground = v('groundrent');
+  const totalCommitted = loans + cc + car + sl + other + exMortgage + childcare + maint + school + ground;
+
+  // Dependant costs
+  const depModelRates = { standard: [250, 200, 150], conservative: [350, 300, 200], generous: [200, 150, 100] };
+  const model = document.getElementById('depModel').value;
+  const rates = depModelRates[model];
+  const depCost = counters.dep0to4 * rates[0] + counters.dep5to11 * rates[1] + counters.dep12to17 * rates[2] + counters.depAdult * 250;
+
+  // Basic living costs (lender ONS-based assumptions)
+  const singleLiving = isJoint ? 900 : 700;
+  const totalDeductions = totalCommitted + depCost + singleLiving;
+
+  // Available for mortgage
+  const availableForMortgage = totalNetMonthly - totalDeductions;
+
+  // Mortgage details
+  const rate = v('rate') || 4.5;
+  const term = v('term') || 25;
+  const deposit = v('deposit');
+  const propValue = v('propValue');
+  const profession = document.getElementById('profession').value;
+  const creditScore = document.getElementById('creditScore').value;
+  const fixedPeriod = document.getElementById('fixedPeriod').value;
+  const buyerType = document.getElementById('buyerType').value;
+
+  // Income multiples based on profile
+  let multipleStd = 4.5;
+  let multipleMax = 5.5;
+
+  if (profession === 'highearner' || (sal1 >= 75000 || (isJoint && sal1 + sal2 >= 100000))) {
+    multipleStd = 5.0; multipleMax = 5.5;
+  }
+  if (profession === 'professional') {
+    multipleStd = 5.0; multipleMax = 6.0;
+  }
+  if (buyerType === 'ftb' && fixedPeriod === '5') {
+    multipleMax = Math.min(6.0, multipleMax + 0.5);
+  }
+  if (creditScore === 'fair') { multipleStd -= 0.5; multipleMax -= 0.5; }
+  if (creditScore === 'poor') { multipleStd -= 1.0; multipleMax -= 1.0; }
+
+  // Max via income multiples
+  const borrowByMultipleStd = grossIncome * multipleStd;
+  const borrowByMultipleMax = grossIncome * multipleMax;
+  const borrowByMultipleMin = grossIncome * 4.0;
+
+  // Max via affordability (what the monthly budget supports)
+  const maxByAffordability = availableForMortgage > 0 ? pv(rate / 100 / 12, term * 12, availableForMortgage) : 0;
+
+  // Take the lower of multiple or affordability
+  const borrowStd = Math.min(borrowByMultipleStd, maxByAffordability);
+  const borrowMax = Math.min(borrowByMultipleMax, maxByAffordability);
+  const borrowMin = Math.min(borrowByMultipleMin, maxByAffordability * 0.85);
+
+  const mainBorrow = Math.max(0, borrowStd);
+  const actualLoan = propValue > 0 ? Math.min(mainBorrow, propValue - deposit) : mainBorrow;
+  const ltv = propValue > 0 && deposit >= 0 ? Math.max(0, (propValue - deposit) / propValue * 100) : 0;
+
+  // Monthly payment
+  const mp = monthlyPayment(actualLoan > 0 ? actualLoan : mainBorrow, rate, term);
+  const ndi = totalNetMonthly - totalDeductions - mp;
+  const usedMultiple = grossIncome > 0 ? (mainBorrow / grossIncome).toFixed(1) : '0';
+
+  // ── UPDATE HERO ─────────────────────────────────────────────────
+  // Show helpful message if borrowing is £0
+  if (mainBorrow <= 0) {
+    document.getElementById('heroAmount').textContent = '£0';
+    document.getElementById('result-hero-sub') && (document.getElementById('result-hero-sub').textContent = 'Based on your figures, your outgoings exceed your income. Try reducing commitments or increasing income.');
+  } else {
+    document.getElementById('heroAmount').textContent = fmt(mainBorrow);
+  }
+  document.getElementById('rangeMin').textContent = fmt(Math.max(0, borrowMin));
+  document.getElementById('rangeMid').textContent = fmt(Math.max(0, borrowStd));
+  document.getElementById('rangeMax').textContent = fmt(Math.max(0, borrowMax));
+  document.getElementById('monthlyPayment').textContent = fmt(mp);
+  document.getElementById('monthlyPaymentSub').textContent = `${rate}% rate over ${term} years`;
+  document.getElementById('ltvValue').textContent = ltv.toFixed(1) + '%';
+  const ltvNote = ltv <= 60 ? '✓ Excellent — best rates available' : ltv <= 75 ? '✓ Good — competitive rates' : ltv <= 85 ? '⚡ Standard — good product range' : '⚠ High LTV — consider larger deposit';
+  document.getElementById('ltvNote').textContent = ltvNote;
+  const ndiEl = document.getElementById('ndi');
+  ndiEl.textContent = fmt(Math.max(0, ndi)) + '/mo';
+  ndiEl.className = 'metric-value ' + (ndi > 500 ? 'green' : ndi > 0 ? 'amber' : 'red');
+  document.getElementById('incMultiple').textContent = usedMultiple + 'x';
+  document.getElementById('incMultipleNote').textContent = `Standard limit is 4.5x; max ${multipleMax}x for your profile`;
+
+  // ── BREAKDOWN ───────────────────────────────────────────────────
+  const bd = [
+    ['Gross Household Income', fmt(grossIncome / 12) + '/mo', 'addition'],
+    ['Child Benefit Income', childBenefitMonthly > 0 ? '+' + fmt(childBenefitMonthly) + '/mo' : '—', 'addition'],
+    ['Est. Net Monthly Take-Home', fmt(totalNetMonthly) + '/mo', ''],
+    ['— Committed Monthly Debt (loans, car finance, other)', loans + car + other > 0 ? '−' + fmt(loans + car + other) + '/mo' : '—', 'deduction'],
+    ['— Credit Cards (3% of £' + Math.round(ccBalance).toLocaleString('en-GB') + ' balance)', cc > 0 ? '−' + fmt(cc) + '/mo' : '—', 'deduction'],
+    ['— Student Loan Repayment', sl > 0 ? '−' + fmt(sl) + '/mo' : '—', 'deduction'],
+    ['— Childcare & Child Costs', childcare + maint + school > 0 ? '−' + fmt(childcare + maint + school) + '/mo' : '—', 'deduction'],
+    ['— Dependant Allowance', depCost > 0 ? '−' + fmt(depCost) + '/mo' : '—', 'deduction'],
+    ['— Living Cost Allowance', '−' + fmt(singleLiving) + '/mo', 'deduction'],
+    ['— Ground Rent / Service Charge', ground > 0 ? '−' + fmt(ground) + '/mo' : '—', 'deduction'],
+    ['Available for Mortgage', fmt(Math.max(0, availableForMortgage)) + '/mo', 'addition'],
+    ['Estimated Mortgage Payment', '−' + fmt(mp) + '/mo', 'deduction'],
+    ['Net Disposable After Mortgage', fmt(Math.max(0, ndi)) + '/mo', ndi > 500 ? 'addition' : 'deduction'],
+  ];
+  document.getElementById('breakdownList').innerHTML = bd.map(([l, v, cls], i) =>
+    `<div class="breakdown-item${i === bd.length - 1 ? ' total' : ''}">
+      <span>${l}</span>
+      <span class="${cls}">${v}</span>
+    </div>`
+  ).join('');
+
+  // ── LENDER GRID ──────────────────────────────────────────────────
+  const lenders = [
+    { name: 'Halifax', multiple: profession === 'highearner' || sal1 >= 75000 ? 5.5 : 4.75, note: 'Up to 5.5× for £75k+ earners' },
+    { name: 'Nationwide', multiple: buyerType === 'ftb' ? 6.0 : (profession !== 'standard' ? 5.5 : 4.5), note: buyerType === 'ftb' ? 'Helping Hand: 6× for FTBs' : '6× now extended to movers' },
+    { name: 'Barclays', multiple: sal1 >= 75000 || (isJoint && sal1+sal2 >= 100000) ? 5.5 : 4.5, note: '5.5× if earning £75k+ (85% LTV max)' },
+    { name: 'NatWest', multiple: 4.5, note: 'Detailed affordability-led model' },
+    { name: 'HSBC', multiple: sal1 >= 50000 ? 5.0 : 4.49, note: '5× for £50k+ / Premier customers' },
+    { name: 'Santander', multiple: 4.5, note: '5.5× up to 75% LTV for higher earners' },
+    { name: 'Accord', multiple: 5.5, note: '5.5× income, popular with brokers' },
+    { name: 'Kensington', multiple: profession === 'professional' ? 6.0 : 5.0, note: 'Specialist — up to 6× for professionals' },
+  ];
+  const maxLenderAmount = Math.max(...lenders.map(l => Math.min(grossIncome * l.multiple, maxByAffordability)));
+  document.getElementById('lenderGrid').innerHTML = lenders.map(l => {
+    const amt = Math.max(0, Math.min(grossIncome * l.multiple, maxByAffordability));
+    const pct = maxLenderAmount > 0 ? (amt / maxLenderAmount * 100) : 0;
+    return `<div class="lender-row">
+      <div><div class="lender-name">${l.name}</div><div class="lender-note">${l.note}</div></div>
+      <div class="lender-bar-wrap"><div class="lender-bar" style="width:${pct}%"></div></div>
+      <div class="lender-amount">${fmt(amt)}</div>
+    </div>`;
+  }).join('');
+
+  // ── STRESS TEST ──────────────────────────────────────────────────
+  const scenarios = [
+    { label: 'Current Rate', rate: rate, badge: 'ok' },
+    { label: '+1% Rise', rate: rate + 1, badge: 'ok' },
+    { label: '+2% Rise', rate: rate + 2, badge: 'warn' },
+    { label: '+3% Rise (FCA stress)', rate: rate + 3, badge: null },
+  ];
+  const loanForStress = actualLoan > 0 ? actualLoan : mainBorrow;
+  document.getElementById('stressResults').innerHTML = scenarios.map(s => {
+    const mp2 = monthlyPayment(loanForStress, s.rate, term);
+    const ndi2 = totalNetMonthly - totalDeductions - mp2;
+    const ok = ndi2 > 300;
+    const cls = ok ? 'ok' : ndi2 > 0 ? 'warn' : 'danger';
+    const badge = ok ? `<span class="stress-badge badge-ok">Affordable</span>` : ndi2 > 0 ? `<span class="stress-badge badge-warn">Tight</span>` : `<span class="stress-badge badge-risk">At Risk</span>`;
+    return `<div class="stress-row">
+      <div><div class="stress-scenario">${s.label}</div><div class="stress-rate">@ ${s.rate.toFixed(2)}%</div></div>
+      <div style="display:flex;align-items:center;gap:12px">
+        ${badge}
+        <div class="stress-payment ${cls}">${fmt(mp2)}/mo</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── STAMP DUTY ───────────────────────────────────────────────────
+  // ── FIX 4: SDLT — ensure FTB check applied when prop_value=0 ──
+  const pv2 = propValue > 0 ? propValue : mainBorrow + deposit;
+  const sdlt = calcSDLT(pv2, buyerType);
+  document.getElementById('sdltResult').innerHTML = `
+    <div class="breakdown-list">
+      <div class="breakdown-item"><span>Property Value</span><span>${fmt(pv2)}</span></div>
+      <div class="breakdown-item"><span>Buyer Type</span><span>${buyerType === 'ftb' ? 'First-Time Buyer' : buyerType === 'mover' ? 'Home Mover' : 'Remortgage / Other'}</span></div>
+      <div class="breakdown-item total"><span>Estimated Stamp Duty</span><span class="${sdlt === 0 ? 'addition' : ''}">${sdlt === 0 ? 'None Payable 🎉' : fmt(sdlt)}</span></div>
+    </div>
+    <div class="field-hint" style="margin-top:12px">Effective April 2025 rates for England. Scotland (LBTT) and Wales (LTT) rates differ. Rates above £625,000 for FTBs revert to standard rates.</div>
+  `;
+
+  // ── FIX 2: Show friendly message if £0 result ─────────────────
+  if (mainBorrow === 0) {
+    document.getElementById('heroAmount').textContent = '£0';
+    document.getElementById('heroAmount').style.fontSize = '28px';
+    const heroSub = document.querySelector('.result-hero-sub');
+    if (heroSub) heroSub.textContent = 'Based on your current figures, lenders are unlikely to approve a mortgage. Try extending your term, reducing commitments, or increasing your income.';
+  }
+
+  // ── FIX 1: CAPITAL vs INTEREST — guard against negative interest ─
+  const baseSched = buildSchedule(mainBorrow, rate, term, 0);
+  const safeInterest = Math.max(0, baseSched.totalInterest);
+  drawDonut(mainBorrow, safeInterest);
+
+  // ── SET UP OVERPAYMENT SLIDER ──────────────────────────────────
+  _loan = mainBorrow; _rate = rate; _term = term; _mp = mp;
+  const maxSlider = Math.max(2000, Math.round(mp * 0.5 / 25) * 25);
+  document.getElementById('opSlider').max = maxSlider;
+  document.getElementById('opSlider').value = 0;
+  updateOverpayment();
+
+  goTo(4);
+
+  // Auto-generate PDF with gate credentials if available
+  if (window._leadName && window._leadEmail) {
+    generatePDF(window._leadName, window._leadEmail, '', '');
+  }
+}
+
+// ── PV (loan from monthly payment) ───────────────────────────────
+function pv(r, n, pmt) {
+  if (r === 0) return pmt * n;
+  return pmt * (1 - Math.pow(1 + r, -n)) / r;
+}
+
+// ── NET MONTHLY ESTIMATE (UK tax 2025/26) ────────────────────────
+function estimateNetMonthly(grossAnnual) {
+  // Personal allowance — tapers by £1 per £2 over £100k, zero at £125,140
+  let pa = 12570;
+  if (grossAnnual > 100000) pa = Math.max(0, 12570 - Math.floor((grossAnnual - 100000) / 2));
+  const basicRate = 0.20, higherRate = 0.40, additionalRate = 0.45;
+  const niRate1 = 0.08, niRate2 = 0.02;
+  let incomeTax = 0;
+  if (grossAnnual > pa) {
+    const taxable = grossAnnual - pa;
+    if (taxable <= 37700) incomeTax = taxable * basicRate;
+    else if (taxable <= 125140) incomeTax = 37700 * basicRate + (taxable - 37700) * higherRate;
+    else incomeTax = 37700 * basicRate + 87440 * higherRate + (taxable - 125140) * additionalRate;
+  }
+  let ni = 0;
+  const niPrimary = 12570, niUpper = 50270;
+  if (grossAnnual > niPrimary) {
+    if (grossAnnual <= niUpper) ni = (grossAnnual - niPrimary) * niRate1;
+    else ni = (niUpper - niPrimary) * niRate1 + (grossAnnual - niUpper) * niRate2;
+  }
+  return (grossAnnual - incomeTax - ni) / 12;
+}
+
+// ── SDLT (England, April 2025) ────────────────────────────────────
+function calcSDLT(price, buyerType) {
+  if (buyerType === 'remortgage') return 0;
+  if (buyerType === 'ftb') {
+    if (price <= 300000) return 0;
+    if (price <= 500000) return (price - 300000) * 0.05;
+    // Above 500k: FTB relief removed, standard rates apply
+  }
+  // Standard rates (post-April 2025)
+  let tax = 0;
+  const bands = [[0, 125000, 0], [125000, 250000, 0.02], [250000, 925000, 0.05], [925000, 1500000, 0.10], [1500000, Infinity, 0.12]];
+  for (const [lo, hi, r] of bands) {
+    if (price > lo) tax += (Math.min(price, hi) - lo) * r;
+  }
+  return tax;
+}
+
+
+// ── CREDIT CARD LIVE CALC ─────────────────────────────────────────
+function updateCCCalc() {
+  const bal = parseFloat(document.getElementById('creditcards').value) || 0;
+  const row = document.getElementById('ccCalcRow');
+  const lbl = document.getElementById('ccMonthly');
+  if (bal > 0) {
+    row.style.display = 'block';
+    lbl.textContent = '£' + Math.round(bal * 0.03).toLocaleString('en-GB');
+  } else {
+    row.style.display = 'none';
+  }
+}
+
+// ── GLOBAL STATE for overpayment ─────────────────────────────────
+let _loan = 0, _rate = 0, _term = 0, _mp = 0;
+let _opChart = null;
+
+// ── DONUT CHART (SVG) ─────────────────────────────────────────────
+function drawDonut(capital, interest) {
+  // FIX 1: Guard against negative or zero interest
+  interest = Math.max(0, interest);
+  capital  = Math.max(0, capital);
+  const total = capital + interest;
+  if (total === 0) return; // nothing to draw
+
+  const r = 80, cx = 100, cy = 100, stroke = 28;
+  const circ = 2 * Math.PI * r;
+  const capPct = capital / total;
+  const intPct = interest / total;
+  const capDash = capPct * circ;
+  const intDash = intPct * circ;
+  const gap = interest > 0 ? 3 : 0; // no gap if interest is zero
+
+  const svg = document.getElementById('donutSvg');
+  svg.innerHTML = `
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#E8F4F0" stroke-width="${stroke}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+      stroke="#0D5C4A" stroke-width="${stroke}"
+      stroke-dasharray="${capDash - gap} ${circ - capDash + gap}"
+      stroke-dashoffset="${circ / 4}"
+      stroke-linecap="round"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+      stroke="#C9A84C" stroke-width="${stroke}"
+      stroke-dasharray="${intDash - gap} ${circ - intDash + gap}"
+      stroke-dashoffset="${circ / 4 - capDash + gap}"
+      stroke-linecap="round"/>
+  `;
+
+  document.getElementById('donutTotal').textContent = fmt(total);
+  document.getElementById('totalCapital').textContent = fmt(capital);
+  document.getElementById('totalInterest').textContent = fmt(interest);
+  document.getElementById('interestPct').textContent = `${(intPct * 100).toFixed(1)}% of total repaid is interest`;
+  document.getElementById('costPerPound').textContent = capital > 0 ? `£${(total / capital).toFixed(2)}` : '—';
+
+  document.getElementById('donutLegend').innerHTML = `
+    <div class="legend-item">
+      <div class="legend-dot-label"><div class="legend-dot" style="background:#0D5C4A"></div>Capital</div>
+      <div><span class="legend-val">${fmt(capital)}</span><span class="legend-pct">${(capPct*100).toFixed(1)}%</span></div>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot-label"><div class="legend-dot" style="background:#C9A84C"></div>Interest</div>
+      <div><span class="legend-val">${fmt(interest)}</span><span class="legend-pct">${(intPct*100).toFixed(1)}%</span></div>
+    </div>`;
+}
+
+// ── BUILD AMORTISATION SCHEDULE ────────────────────────────────────
+function buildSchedule(principal, annualRate, termYears, extraMonthly = 0) {
+  const r = annualRate / 100 / 12;
+  const stdPayment = monthlyPayment(principal, annualRate, termYears);
+  let balance = principal;
+  const balances = [balance];
+  let totalInterest = 0;
+  let months = 0;
+  while (balance > 0.01 && months < termYears * 12 + 1) {
+    const intCharge = balance * r;
+    const payment = Math.min(balance + intCharge, stdPayment + extraMonthly);
+    const capital = payment - intCharge;
+    totalInterest += intCharge;
+    balance = Math.max(0, balance - capital);
+    balances.push(balance);
+    months++;
+  }
+  return { balances, totalInterest, months };
+}
+
+// ── OVERPAYMENT UPDATE ─────────────────────────────────────────────
+function updateOverpayment() {
+  if (!_loan || !_rate || !_term) return;
+  const extra = parseFloat(document.getElementById('opSlider').value) || 0;
+  document.getElementById('opAmountLabel').textContent = extra === 0 ? '£0 / mo (none)' : `+£${extra.toLocaleString('en-GB')}/mo`;
+
+  const base = buildSchedule(_loan, _rate, _term, 0);
+  const op   = buildSchedule(_loan, _rate, _term, extra);
+
+  const interestSaved = base.totalInterest - op.totalInterest;
+  const monthsSaved   = base.months - op.months;
+  const yearsSaved    = monthsSaved / 12;
+  const newTermYrs    = op.months / 12;
+  const freeYear      = new Date().getFullYear() + Math.ceil(newTermYrs);
+  const totalRepaid   = _loan + op.totalInterest;
+
+  document.getElementById('opInterestSaved').textContent = fmt(Math.max(0, interestSaved));
+  document.getElementById('opYearsSaved').textContent    = yearsSaved >= 0.1 ? `${yearsSaved.toFixed(1)} yrs` : '< 1 mo';
+  document.getElementById('opNewTerm').textContent       = `${Math.floor(newTermYrs)}y ${Math.round((newTermYrs % 1) * 12)}m`;
+  document.getElementById('opNewMonthly').textContent    = fmt(_mp + extra);
+  document.getElementById('opFreeYear').textContent      = freeYear.toString();
+  document.getElementById('opTotalRepaid').textContent   = fmt(totalRepaid);
+
+  drawLineChart(base.balances, op.balances, _term);
+}
+
+// ── LINE CHART ─────────────────────────────────────────────────────
+function drawLineChart(baseBalances, opBalances, termYears) {
+  const canvas = document.getElementById('opChart');
+  if (!canvas) return;
+
+  // Build year-interval labels & data
+  const labels = [], baseData = [], opData = [];
+  const totalMonths = termYears * 12;
+  const step = Math.max(1, Math.floor(totalMonths / 30));
+
+  for (let m = 0; m <= totalMonths; m += step) {
+    labels.push(m === 0 ? 'Now' : `Yr ${Math.round(m/12)}`);
+    baseData.push(+(baseBalances[Math.min(m, baseBalances.length - 1)] / 1000).toFixed(1));
+    opData.push(+(( opBalances[Math.min(m, opBalances.length - 1)] || 0) / 1000).toFixed(1));
+  }
+
+  if (_opChart) { _opChart.destroy(); _opChart = null; }
+
+  _opChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Without Overpayment',
+          data: baseData,
+          borderColor: '#0D5C4A',
+          backgroundColor: 'rgba(13,92,74,0.08)',
+          borderWidth: 2.5,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          fill: true,
+          tension: 0.4,
+        },
+        {
+          label: 'With Overpayment',
+          data: opData,
+          borderColor: '#C9A84C',
+          backgroundColor: 'rgba(201,168,76,0.08)',
+          borderWidth: 2.5,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          fill: true,
+          tension: 0.4,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1A2E29',
+          titleFont: { family: 'Poppins', size: 12 },
+          bodyFont: { family: 'Poppins', size: 12 },
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: £${(ctx.parsed.y).toFixed(0)}k`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(200,224,218,0.4)' },
+          ticks: { font: { family: 'Poppins', size: 11 }, color: '#7A9E96', maxTicksLimit: 10 }
+        },
+        y: {
+          grid: { color: 'rgba(200,224,218,0.4)' },
+          ticks: {
+            font: { family: 'Poppins', size: 11 }, color: '#7A9E96',
+            callback: v => `£${v}k`
+          },
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+// ── LOAD Chart.js & jsPDF ────────────────────────────────────────
+(function loadScripts() {
+  const chartJs = document.createElement('script');
+  chartJs.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
+  chartJs.onload = () => { if (_loan) updateOverpayment(); };
+  document.head.appendChild(chartJs);
+
+  const pdfJs = document.createElement('script');
+  pdfJs.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+  document.head.appendChild(pdfJs);
+})();
+
+function generatePDF(clientName, clientEmail, clientPhone, clientStage) {
+  if (typeof window.jspdf === 'undefined') {
+    setTimeout(() => generatePDF(clientName, clientEmail, clientPhone, clientStage), 1000);
+    return;
+  }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  const W = 210;
+  const H = 297;
+  const GREEN = [13,92,74], GMID = [26,122,97], GOLD = [201,168,76];
+  const GLITE = [214,239,233], WHITE = [255,255,255], DARK = [26,46,41];
+  const MID = [61,89,81], LITE = [122,158,150], OFFWHT = [248,250,249], BORDER = [200,224,218];
+  const lm = 14, rm = W - 14;
+
+  const g = id => document.getElementById(id)?.textContent || 'N/A';
+  const heroAmt = g('heroAmount'), rangeMin = g('rangeMin'), rangeMid = g('rangeMid'), rangeMax = g('rangeMax');
+  const mpVal = g('monthlyPayment'), ltvVal = g('ltvValue'), ndiVal = g('ndi'), multVal = g('incMultiple');
+  const capVal = g('totalCapital'), intVal = g('totalInterest'), cpp = g('costPerPound');
+  const timestamp = new Date().toLocaleString('en-GB');
+
+  let y = 0;
+
+  const R = (x,ry,w,h,col,r=0) => { doc.setFillColor(...col); r>0?doc.roundedRect(x,ry,w,h,r,r,'F'):doc.rect(x,ry,w,h,'F'); };
+  const SF = (st,sz,col) => { doc.setFont('helvetica',st); doc.setFontSize(sz); doc.setTextColor(...(col||DARK)); };
+  const HL = (ry,col) => { doc.setDrawColor(...(col||BORDER)); doc.setLineWidth(0.3); doc.line(lm,ry,rm,ry); };
+
+  function secHead(title, ry) {
+    R(lm, ry, W-28, 8, GREEN, 2);
+    SF('bold', 10, GOLD);
+    // Strip emojis from section headers for clean PDF rendering
+    const cleanTitle = title.replace(/[\u{1F300}-\u{1FFFF}]/gu, '').replace(/[^\x00-\x7F]/g,'').trim();
+    doc.text(cleanTitle, lm+3, ry+5.5);
+    return ry+12;
+  }
+
+  function metBox(x, ry, w, label, val, col) {
+    R(x, ry, w, 18, OFFWHT, 2);
+    doc.setDrawColor(...BORDER); doc.setLineWidth(0.3);
+    doc.roundedRect(x,ry,w,18,2,2,'S');
+    SF('normal', 7, LITE); doc.text(label.toUpperCase(), x+3, ry+5.5);
+    SF('bold', 11, col||GREEN); doc.text(val, x+3, ry+14);
+  }
+
+  function newPage() {
+    doc.addPage(); y = 18;
+    R(0,0,W,10,GREEN);
+    SF('bold',8,GOLD); doc.text('ESN Financial Services - Mortgage Affordability Report', lm, 7);
+    SF('normal',7,GLITE); doc.text(`Prepared for ${clientName}`, rm-2, 7, {align:'right'});
+  }
+
+  function chk(need) { if (y+need > H-18) newPage(); }
+
+  // -- COVER ------------------------------------------------------
+  R(0,0,W,65,GREEN);
+  R(0,0,W,2,GOLD);
+  doc.setFillColor(26,122,97);
+  doc.triangle(W-55,0,W,0,W,65,'F');
+
+  try {
+    const logoSrc = document.getElementById('headerLogo')?.src||'';
+    if(logoSrc.startsWith('data:image')) doc.addImage(logoSrc,'JPEG',lm,10,22,22);
+  } catch(e){}
+
+  SF('bold',20,GOLD); doc.text('ESN Financial Services', lm+27, 22);
+  SF('normal',10,GLITE); doc.text('Mortgage Affordability Report', lm+27, 30);
+  doc.setDrawColor(...GOLD); doc.setLineWidth(0.4); doc.line(lm+27,33,rm-8,33);
+  SF('normal',9,GLITE);
+  doc.text(`Prepared for: ${clientName}`, lm+27, 40);
+  doc.text(`Date: ${timestamp}`, lm+27, 47);
+  if(clientEmail) doc.text(`Email: ${clientEmail}`, lm+27, 54);
+  SF('normal',7,[245,237,214]);
+  R(0,57,W,8,[0,50,35]);
+  doc.text('For illustrative purposes only. Does not constitute a mortgage offer or financial advice.', W/2, 62.5, {align:'center'});
+
+  y = 74;
+
+  // -- HERO -------------------------------------------------------
+  R(lm,y,W-28,26,GMID,3);
+  SF('normal',7.5,GLITE); doc.text('ESTIMATED MAXIMUM BORROWING', W/2, y+6, {align:'center'});
+  SF('bold',24,GOLD); doc.text(heroAmt, W/2, y+17, {align:'center'});
+  SF('normal',7,GLITE); doc.text('Based on your income, commitments and typical lender criteria', W/2, y+23, {align:'center'});
+  y+=30;
+
+  chk(22);
+  const bw=(W-28-8)/3;
+  [['Conservative',rangeMin],['Standard',rangeMid],['Best Case',rangeMax]].forEach(([lb,vl],i)=>{
+    const bx=lm+i*(bw+4);
+    R(bx,y,bw,15,i===1?GREEN:OFFWHT,2);
+    doc.setDrawColor(...BORDER); doc.roundedRect(bx,y,bw,15,2,2,'S');
+    SF('normal',6.5,i===1?GLITE:LITE); doc.text(lb.toUpperCase(), bx+bw/2, y+5, {align:'center'});
+    SF('bold',10,i===1?GOLD:DARK); doc.text(vl, bx+bw/2, y+12, {align:'center'});
+  });
+  y+=20;
+
+  const mw=(W-28-6)/4;
+  [['Monthly Repayment',mpVal,GREEN],['Loan-to-Value',ltvVal,DARK],['Net Disposable',ndiVal,GOLD],['Income Multiple',multVal,DARK]
+  ].forEach(([lb,vl,col],i)=>{ metBox(lm+i*(mw+2),y,mw,lb,vl,col); });
+  y+=24;
+
+  // -- BREAKDOWN -------------------------------------------------
+  const bdRows=[];
+  document.querySelectorAll('#breakdownList .breakdown-item').forEach(el=>{
+    const sp=el.querySelectorAll('span'); if(sp.length>=2) bdRows.push([sp[0].textContent,sp[1].textContent]);
+  });
+  chk(14+bdRows.length*7);
+  y=secHead('  Affordability Breakdown',y);
+  bdRows.forEach(([lb,vl],i)=>{
+    const tot=i===bdRows.length-1;
+    R(lm,y,W-28,7,tot?GREEN:i%2===0?OFFWHT:WHITE,1);
+    SF(tot?'bold':'normal',8,tot?GOLD:DARK); doc.text(lb,lm+3,y+5);
+    SF(tot?'bold':'normal',8,tot?GOLD:vl.startsWith('-')?[192,57,43]:GREEN); doc.text(vl,rm-3,y+5,{align:'right'});
+    y+=7;
+  });
+  y+=6;
+
+  // -- LENDERS ---------------------------------------------------
+  const lRows=[];
+  document.querySelectorAll('.lender-row').forEach(el=>{
+    const nm=el.querySelector('.lender-name')?.textContent||'';
+    const nt=el.querySelector('.lender-note')?.textContent||'';
+    const am=el.querySelector('.lender-amount')?.textContent||'';
+    if(nm) lRows.push([nm,nt,am]);
+  });
+  chk(14+lRows.length*9);
+  y=secHead('  Lender Comparison',y);
+  const maxA=lRows.reduce((m,r)=>Math.max(m,parseFloat(r[2].replace(/[£,k]/g,''))||0),0);
+  lRows.forEach(([nm,nt,am],i)=>{
+    R(lm,y,W-28,8,i%2===0?OFFWHT:WHITE,1);
+    SF('bold',8.5,DARK); doc.text(nm,lm+3,y+4);
+    SF('normal',7,LITE); doc.text(nt,lm+3,y+7.5);
+    SF('bold',10,GREEN); doc.text(am,rm-3,y+6,{align:'right'});
+    const bX=lm+38, bW=W-28-38-28, fill=maxA>0?(parseFloat(am.replace(/[£,k]/g,''))||0)/maxA*bW:0;
+    R(bX,y+3,bW,2.5,BORDER); R(bX,y+3,fill,2.5,GREEN);
+    y+=9;
+  });
+  y+=6;
+
+  // -- STRESS TEST -----------------------------------------------
+  const sRows=[];
+  document.querySelectorAll('.stress-row').forEach(el=>{
+    const sc=el.querySelector('.stress-scenario')?.textContent||'';
+    const rt=el.querySelector('.stress-rate')?.textContent||'';
+    const pm=el.querySelector('.stress-payment')?.textContent||'';
+    const bg=el.querySelector('.stress-badge')?.textContent||'';
+    if(sc) sRows.push([sc,rt,pm,bg]);
+  });
+  chk(14+sRows.length*8);
+  y=secHead('  Interest Rate Stress Test',y);
+  sRows.forEach(([sc,rt,pm,bg],i)=>{
+    R(lm,y,W-28,8,i%2===0?OFFWHT:WHITE,1);
+    SF('bold',8.5,DARK); doc.text(sc,lm+3,y+4);
+    SF('normal',7,LITE); doc.text(rt,lm+3,y+7.5);
+    const bgCol=bg==='Affordable'?[214,239,233]:bg==='Tight'?[255,243,205]:[253,234,234];
+    const bgTxt=bg==='Affordable'?GREEN:bg==='Tight'?[133,100,4]:[192,57,43];
+    R(rm-62,y+1.5,22,5.5,bgCol,1); SF('bold',6.5,bgTxt); doc.text(bg,rm-51,y+5.5,{align:'center'});
+    SF('bold',10,bg==='Affordable'?GREEN:bg==='Tight'?[201,122,0]:[192,57,43]); doc.text(pm,rm-3,y+6,{align:'right'});
+    y+=9;
+  });
+  y+=6;
+
+  // -- CAPITAL vs INTEREST ---------------------------------------
+  chk(36);
+  y=secHead('  Capital vs Interest',y);
+  const cw=(W-28-4)/3;
+  [['Total Capital',capVal,GREEN],['Total Interest',intVal,GOLD],['Cost per £1 Borrowed',cpp,DARK]
+  ].forEach(([lb,vl,col],i)=>{ metBox(lm+i*(cw+2),y,cw,lb,vl,col); });
+  y+=24;
+
+  // -- STAMP DUTY ------------------------------------------------
+  const sdRows=[];
+  document.querySelectorAll('#sdltResult .breakdown-item').forEach(el=>{
+    const sp=el.querySelectorAll('span'); if(sp.length>=2) sdRows.push([sp[0].textContent,sp[1].textContent]);
+  });
+  if(sdRows.length){
+    chk(14+sdRows.length*8);
+    y=secHead('  Stamp Duty (SDLT)',y);
+    sdRows.forEach(([lb,vl],i)=>{
+      chk(8);
+      const tot=i===sdRows.length-1;
+      R(lm,y,W-28,7,tot?GREEN:i%2===0?OFFWHT:WHITE,1);
+      SF(tot?'bold':'normal',8.5,tot?GOLD:DARK); doc.text(lb,lm+3,y+5);
+      SF(tot?'bold':'normal',8.5,tot?GOLD:GREEN); doc.text(vl,rm-3,y+5,{align:'right'});
+      y+=7;
+    });
+    y+=6;
+  }
+
+  // -- OVERPAYMENT EXAMPLE ---------------------------------------
+  if (mainBorrow > 0) {
+    chk(70);
+    y = secHead('  Overpayment Example - What Could You Save?', y);
+
+    // Calculate base schedule
+    const mpBase = monthlyPayment(mainBorrow, rate, term);
+    let balBase = mainBorrow, totIntBase = 0, monthsBase = 0;
+    while (balBase > 0.01 && monthsBase < term * 12 + 1) {
+      const ic = balBase * (rate / 100 / 12);
+      const pay = Math.min(balBase + ic, mpBase);
+      totIntBase += ic;
+      balBase = Math.max(0, balBase - (pay - ic));
+      monthsBase++;
+    }
+
+    // Calculate with £100 overpayment
+    const extra = 100;
+    let balOp = mainBorrow, totIntOp = 0, monthsOp = 0;
+    while (balOp > 0.01 && monthsOp < term * 12 + 1) {
+      const ic = balOp * (rate / 100 / 12);
+      const pay = Math.min(balOp + ic, mpBase + extra);
+      totIntOp += ic;
+      balOp = Math.max(0, balOp - (pay - ic));
+      monthsOp++;
+    }
+
+    const intSaved     = Math.max(0, totIntBase - totIntOp);
+    const monthsSaved  = monthsBase - monthsOp;
+    const yearsSaved   = (monthsSaved / 12).toFixed(1);
+    const freeYear     = new Date().getFullYear() + Math.ceil(monthsOp / 12);
+    const newMonthly   = mpBase + extra;
+
+    // Intro text
+    R(lm, y, W-28, 14, OFFWHT, 2);
+    SF('normal', 8.5, MID);
+    const introText = `By paying just £${extra} extra per month on top of your standard repayment, here\'s the difference it makes over the life of your mortgage:`;
+    const introLines = doc.splitTextToSize(introText, W-28-8);
+    doc.text(introLines, lm+4, y+5);
+    y += introLines.length > 1 ? 16 : 16;
+
+    // 3 metric boxes: interest saved, years saved, mortgage free year
+    const ow = (W-28-8) / 3;
+    [
+      ['Interest Saved', fmt(intSaved), GOLD],
+      ['Years Saved',    yearsSaved + ' years', GREEN],
+      ['Mortgage Free',  freeYear.toString(), DARK],
+    ].forEach(([lb, vl, col], i) => { metBox(lm + i*(ow+4), y, ow, lb, vl, col); });
+    y += 24;
+
+    // Comparison table
+    const compRows = [
+      ['', 'Without Overpayment', 'With £100/mo Extra'],
+      ['Monthly Payment',    fmt(mpBase),       fmt(newMonthly)],
+      ['Total Interest',     fmt(Math.max(0, totIntBase)), fmt(Math.max(0, totIntOp))],
+      ['Mortgage Term',      Math.ceil(monthsBase/12) + ' years', Math.ceil(monthsOp/12) + ' years'],
+      ['Mortgage Free Year', (new Date().getFullYear() + Math.ceil(monthsBase/12)).toString(), freeYear.toString()],
+    ];
+
+    compRows.forEach(([label, col1, col2], i) => {
+      const isHeader = i === 0;
+      const colW = (W-28) / 3;
+      R(lm, y, W-28, 8, isHeader ? GREEN : i%2===0 ? OFFWHT : WHITE, 1);
+      SF(isHeader ? 'bold' : 'normal', isHeader ? 8 : 8.5, isHeader ? GOLD : DARK);
+      doc.text(label, lm+3, y+5.5);
+      SF(isHeader ? 'bold' : 'normal', isHeader ? 8 : 8.5, isHeader ? GOLD : DARK);
+      doc.text(col1, lm + colW + colW/2, y+5.5, {align:'center'});
+      SF(isHeader ? 'bold' : 'normal', isHeader ? 8 : 8.5, isHeader ? GOLD : GREEN);
+      doc.text(col2, lm + colW*2 + colW/2, y+5.5, {align:'center'});
+      y += 8;
+    });
+
+    // Note
+    y += 4;
+    R(lm, y, W-28, 10, OFFWHT, 2);
+    SF('normal', 7.5, LITE);
+    doc.text('Most lenders allow overpayments of up to 10% of your outstanding balance per year without early repayment charges. Always check your mortgage terms.', lm+4, y+6, {maxWidth: W-28-8});
+    y += 14;
+  }
+
+  // -- NEXT STEPS ------------------------------------------------
+  chk(80);
+  y=secHead('  Your Next Steps',y);
+  [
+    ['1','Book a free consultation','Speak with Aidan O\'Brien at ESN Financial Services for a full mortgage assessment tailored to your circumstances. No obligation.'],
+    ['2','Get an Agreement in Principle','An AIP shows sellers you\'re serious and gives you confidence in your budget before making offers.'],
+    ['3','Review your credit file','Check your credit report for free at checkmyfile.com  -  the UK\'s most detailed multi-agency credit report. Correcting any errors can significantly improve your mortgage options.'],
+    ['4','Prepare your documents','3 months\' payslips, 3 months\' bank statements, proof of ID and proof of address ready for your application.'],
+  ].forEach(([num,title,detail],i)=>{
+    chk(22);
+    R(lm,y,W-28,18,i%2===0?OFFWHT:WHITE,2);
+    R(lm,y,7,18,GMID,2);
+    SF('bold',9,WHITE); doc.text(num,lm+3.5,y+10,{align:'center'});
+    SF('bold',9,GREEN); doc.text(title,lm+11,y+6.5);
+    SF('normal',7.5,MID);
+    const lines = doc.splitTextToSize(detail, W-28-15);
+    doc.text(lines,lm+11,y+12);
+    y += lines.length > 2 ? 22 : 20;
+  });
+  y+=4;
+
+  // -- CONTACT DETAILS -------------------------------------------
+  chk(30);
+  R(lm,y,W-28,26,OFFWHT,3);
+  doc.setDrawColor(...BORDER); doc.setLineWidth(0.3);
+  doc.roundedRect(lm,y,W-28,26,3,3,'S');
+  SF('bold',10,GREEN); doc.text('Get in Touch',lm+6,y+8);
+  SF('normal',9,MID);
+  doc.text('Aidan O\'Brien  -  ESN Financial Services', lm+6, y+14);
+  doc.text('aidan'+'@'+'esnfinancialservices.co.uk', lm+6, y+19);
+  doc.text('calendly.com/aidan_esnfinancialservices/mortgage_consultation', lm+6, y+24);
+  SF('normal',9,MID);
+  doc.text('instagram.com/mortgageswithaidan', rm-3, y+19, {align:'right'});
+  y+=30;
+
+  // -- CTA BOX ---------------------------------------------------
+  chk(28);
+  R(lm,y,W-28,24,GREEN,3);
+  SF('bold',13,GOLD); doc.text('Ready to take the next step?',W/2,y+9,{align:'center'});
+  SF('normal',9,GLITE); doc.text('Contact ESN Financial Services for a free, no-obligation consultation.',W/2,y+16,{align:'center'});
+  SF('bold',9,GOLD); doc.text('aidan'+'@'+'esnfinancialservices.co.uk',W/2,y+22,{align:'center'});
+  y+=28;
+
+  // -- PAGE FOOTERS ---------------------------------------------
+  const pages=doc.getNumberOfPages();
+  for(let p=1;p<=pages;p++){
+    doc.setPage(p);
+    R(0,H-12,W,12,GREEN);
+    SF('normal',6,[214,239,233]);
+    doc.text('ESN Financial Services. Directly authorised and regulated by the FCA. For illustrative purposes only - not financial advice. Your home may be repossessed if you do not keep up repayments on a mortgage.',W/2,H-6.5,{align:'center',maxWidth:W-20});
+    SF('normal',6.5,GOLD); doc.text(`Page ${p} of ${pages}`,rm-2,H-6.5,{align:'right'});
+  }
+
+  doc.save(`ESN_Mortgage_Report_${clientName.replace(/[^a-z0-9]/gi,'_')}.pdf`);
+}
+
+function resetCalc() { goTo(0); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+</script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-box"><img src="data:image/jpeg;base64,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qqmV6q5rp+/d/vGfNctqFS/dxKaBKY/LlMh+LYPoUC18jO7MpbvGfP0QjK8yieGSCa8ej793+8Z83ZLD4aP0UYzWQ52MuveM+fpwnemMVRPogH37v94z5r6Gsel8XBbFKrXr3jPn6U2nKEyFAxKlMzucLN+7/eM+a9Uneglph9NrsllCbXr3jPn6lh8NGEBBom1hZv3f7xnzEMhkMhkMh3ClRofJXtDCEiyMlNRHx8xozKIbly+veM+frXnw0ZMmNm/d/vGKoJXWAAAAigEn1xUz0xBJKKqlsraCeGES3/g8YOVxvGfPcLn9hTcbt36Wk4uEkkllDKbij0NCl8h5DFFBNs1ylpOBweM3OL1PIyZlP/pqmOcTnZzs52c7OdnOznZzs52c7OdnOznZzs52c7OdnOznZzs52c7OdnOznZzs52c7OdnOznZzs52c7OdnOznZzs52My1hTTv0jgkNSluYmISyajMY2Ok5YrG5FMViNoorJImI7EMpo1FuC1E9EsNNsxC4qWxppwyOssNNoeVkGpMnkSKlA8sobDzx7DPYg2kQlWIU0jIQWASvRNE3gpyZIm8lDQNSluRelk0kf4CsidSwGpvIbmKYLBx/E7VoOiK/kshrciB8pVoQqvsm+EBCfqYTWg7o4aMoFEybwejwLLh8n1/Deuxt3JJvIz7RU09GSMFDAaaoZPGfDcsxgWERmW5kg9AvSKwsmrLFWrPsWarzCKZTpGptJqLvOGE3kZ9or/gNBhyiMbDczfCT0SErLVGINap+iEM1SlmMbgTXqMrtVmKA1V/BG2AyMMsVpDMRgJv2fyE57AfT8N67Gk0CeqNIPwJidttjdD9ovgzshkKX4r/pL2L/ADspcDkqaj3Zl3sO3kYSdA0mgT1RpAkNrv0xGNP8sQqtTIFulNCzHen8EeQnxZEuCLgpsC1cwBHZDQ62fVQSCnvNVkPgBmZOse2PbjMQcg/lCGTZ5fkdnawskMZprNoaFhxsKjB5v6PeoCOVEidAPwsyEcWKaCiL8Cdsk3JmuT7ExFFkhzhW5INGn2NZGs0hoWHG3/aP/9oADAMBAAIAAwAAABD3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333n7zzr332dqH7331v3322/333333333333332uU013333R7vz331fD33/7333333333333332tT333333vn33330OVL3/7333333333333332vQxz3330xNf3330K1Db/7333333333333332tT332z3327t/170L27bf7333333333333332tT333339/3j3330L30jv7333333333333332soABD331tUSX330L332zX3333333333333323332z33206/wB999N9999O999999999999999rAMEEOELEAEMOMIEJBKCd9999999999999999o0STInNPP2rVM8gnkspW9999999999999999/dtt9NcuefNu++9/usu+99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999/8QAJhEBAAIBAQkA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" onerror="this.parentElement.innerHTML='<svg viewBox=\'0 0 80 80\' xmlns=\'http://www.w3.org/2000/svg\'><rect width=\'80\' height=\'80\' rx=\'10\' fill=\'#0D5C4A\'/><text x=\'50%\' y=\'38\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Georgia,serif\' font-size=\'18\' font-weight=\'600\' fill=\'#C9A84C\' letter-spacing=\'4\'>E·S·N</text><line x1=\'16\' y1=\'48\' x2=\'64\' y2=\'48\' stroke=\'#C9A84C\' stroke-width=\'0.8\'/><text x=\'50%\' y=\'60\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Georgia,serif\' font-size=\'7\' fill=\'#C9A84C\' letter-spacing=\'2\'>FINANCIAL SERVICES</text></svg>'" alt="ESN Financial Services" id="headerLogo"></div>
+    <div class="header-text">
+      <h1>Mortgage Affordability Calculator</h1>
+      <p>ESN Financial Services — Get a detailed estimate of your borrowing power</p>
+    </div>
+  </div>
+  <div class="disclaimer-banner">
+    This calculator provides an estimate only and does not constitute a mortgage offer. Results are based on typical lender criteria. Your home may be repossessed if you do not keep up repayments on a mortgage.
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- PROGRESS BAR -->
+  <div class="steps-bar" id="stepsBar">
+    <div class="step-item active" onclick="goTo(0)"><div class="step-num">Step 1</div><div class="step-label">Income</div></div>
+    <div class="step-item" onclick="goTo(1)"><div class="step-num">Step 2</div><div class="step-label">Commitments</div></div>
+    <div class="step-item" onclick="goTo(2)"><div class="step-num">Step 3</div><div class="step-label">Dependants</div></div>
+    <div class="step-item" onclick="goTo(3)"><div class="step-num">Step 4</div><div class="step-label">Mortgage</div></div>
+    <div class="step-item" onclick="goToGate()"><div class="step-num">Step 5</div><div class="step-label">Results</div></div>
+  </div>
+
+  <!-- ══════════════════ STEP 1: INCOME ══════════════════ -->
+  <div class="step-panel active" id="panel0">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">💷</div>
+        <div><h2>Your Income</h2><p>Tell us about your household earnings</p></div>
+      </div>
+      <div class="card-body">
+
+        <div class="toggle-row" onclick="toggleJoint(event)">
+          <div>
+            <label>Joint Application</label>
+            <small>Are you applying with a partner or second applicant?</small>
+          </div>
+          <label class="switch" onclick="event.stopPropagation()">
+            <input type="checkbox" id="isJoint" onchange="toggleJoint(event)">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="section-title"><span class="dot"></span> Applicant 1</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Basic Salary (Gross Annual) <span class="required">*</span></label>
+            <div class="input-wrap"><span class="prefix">£</span><input type="number" id="salary1" placeholder="45,000" min="0"></div>
+            <span class="field-hint">Your guaranteed base salary before tax</span>
+          </div>
+          <div class="field">
+            <label>Employment Type</label>
+            <select id="empType1">
+              <option value="employed">Employed (PAYE)</option>
+              <option value="selfemployed">Self-Employed / Sole Trader</option>
+              <option value="limitedco">Ltd Company Director</option>
+              <option value="contractor">Contractor (Day Rate)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Bonus / Commission (Annual)
+              <span class="tooltip-wrap"><span class="tooltip-icon">?</span><span class="tooltip-text">Most lenders use 50–60% of regular bonus. Only include if regular and evidenced.</span></span>
+            </label>
+            <div class="input-wrap"><span class="prefix">£</span><input type="number" id="bonus1" placeholder="0" min="0"></div>
+            <span class="field-hint">Lenders typically use 50–60% of this</span>
+          </div>
+          <div class="field">
+            <label>Overtime / Other Income (Annual)</label>
+            <div class="input-wrap"><span class="prefix">£</span><input type="number" id="other1" placeholder="0" min="0"></div>
+            <span class="field-hint">Regular overtime, rental income, maintenance payments</span>
+          </div>
+        </div>
+
+        <div id="app2Section" style="display:none">
+          <div class="section-title" style="margin-top:28px"><span class="dot"></span> Applicant 2</div>
+          <div class="form-grid">
+            <div class="field">
+              <label>Basic Salary (Gross Annual)</label>
+              <div class="input-wrap"><span class="prefix">£</span><input type="number" id="salary2" placeholder="35,000" min="0"></div>
+            </div>
+            <div class="field">
+              <label>Employment Type</label>
+              <select id="empType2">
+                <option value="employed">Employed (PAYE)</option>
+                <option value="selfemployed">Self-Employed / Sole Trader</option>
+                <option value="limitedco">Ltd Company Director</option>
+                <option value="contractor">Contractor (Day Rate)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Bonus / Commission (Annual)</label>
+              <div class="input-wrap"><span class="prefix">£</span><input type="number" id="bonus2" placeholder="0" min="0"></div>
+            </div>
+            <div class="field">
+              <label>Overtime / Other Income (Annual)</label>
+              <div class="input-wrap"><span class="prefix">£</span><input type="number" id="other2" placeholder="0" min="0"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-box" style="margin-top:20px">
+          <span class="icon">ℹ️</span>
+          <span><strong>Self-employed or Ltd company directors:</strong> Most lenders will use an average of your last 2 years' net profit or salary + dividends. Some will accept 1 year's accounts. Your income used in calculations may differ from your quoted salary above.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-primary" onclick="goTo(1)">Next: Commitments →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ STEP 2: COMMITMENTS ══════════════════ -->
+  <div class="step-panel" id="panel1">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📋</div>
+        <div><h2>Monthly Commitments</h2><p>Existing debts and outgoings that lenders will factor in</p></div>
+      </div>
+      <div class="card-body">
+
+        <div class="info-box" style="margin-bottom:20px">
+          <span class="icon">💡</span>
+          <span>Lenders deduct monthly committed expenditure from your disposable income before calculating affordability. Be thorough — underdeclaring commitments can lead to declined applications.</span>
+        </div>
+
+        <div class="section-title"><span class="dot"></span> Credit Commitments</div>
+        <div class="commitment-list">
+          <div class="commitment-row">
+            <div><div class="commitment-label">Personal Loans</div><div class="commitment-sub">Total monthly repayments on all personal loans</div></div>
+            <div></div>
+            <div class="commitment-amount"><span>£</span><input type="number" id="loans" placeholder="0" min="0"></div>
+            <div></div>
+          </div>
+          <div class="commitment-row">
+            <div><div class="commitment-label">Credit Cards / Store Cards — Outstanding Balance</div><div class="commitment-sub">Enter the total outstanding balance across all cards. Most lenders apply 3% of this figure as a monthly commitment.</div></div>
+            <div></div>
+            <div class="commitment-amount"><span>£</span><input type="number" id="creditcards" placeholder="0" min="0" oninput="updateCCCalc()"></div>
+            <div></div>
+          </div>
+          <div id="ccCalcRow" style="display:none; padding:8px 16px 4px; background:#EFF8F5; border-radius:0 0 8px 8px; margin-top:-8px; font-size:12px; color:#1A7A61; font-weight:600;">
+            ≈ <span id="ccMonthly">£0</span>/mo factored in by lenders (3% of balance)
+          </div>
+          <div class="commitment-row">
+            <div><div class="commitment-label">Car Finance / PCP / HP</div><div class="commitment-sub">Monthly car finance or hire purchase payments</div></div>
+            <div></div>
+            <div class="commitment-amount"><span>£</span><input type="number" id="carfinance" placeholder="0" min="0"></div>
+            <div></div>
+          </div>
+          <div class="commitment-row">
+            <div>
+              <div class="commitment-label">Student Loan <span class="chip">Plan 1/2/4/PG</span></div>
+              <div class="commitment-sub">Your monthly student loan deduction (shown on payslip). It's the repayment amount that counts, not the balance.</div>
+            </div>
+            <div></div>
+            <div class="commitment-amount"><span>£</span><input type="number" id="studentloan" placeholder="0" min="0"></div>
+            <div></div>
+          </div>
+          <div class="commitment-row">
+            <div><div class="commitment-label">Other Loans / Overdrafts</div><div class="commitment-sub">Payday loans, buy now pay later, mail order accounts, overdrafts</div></div>
+            <div></div>
+            <div class="commitment-amount"><span>£</span><input type="number" id="otherloans" placeholder="0" min="0"></div>
+            <div></div>
+          </div>
+          <div class="commitment-row">
+            <div><div class="commitment-label">Existing Mortgage / Rent</div><div class="commitment-sub">Only if this property is being retained (not sold)</div></div>
+            <div></div>
+            <div class="commitment-amount"><span>£</span><input type="number" id="existingmortgage" placeholder="0" min="0"></div>
+            <div></div>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:28px"><span class="dot"></span> Household Outgoings</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Monthly Childcare Costs</label>
+            <div class="input-wrap"><span class="prefix">£</span><input type="number" id="childcare" placeholder="0" min="0"></div>
+            <span class="field-hint">Nursery, after-school clubs, childminders</span>
+          </div>
+          <div class="field">
+            <label>Child Maintenance Payments</label>
+            <div class="input-wrap"><span class="prefix">£</span><input type="number" id="maintenance" placeholder="0" min="0"></div>
+          </div>
+          <div class="field">
+            <label>School / Education Fees</label>
+            <div class="input-wrap"><span class="prefix">£</span><input type="number" id="schoolfees" placeholder="0" min="0"></div>
+          </div>
+          <div class="field">
+            <label>Ground Rent / Service Charge</label>
+            <div class="input-wrap"><span class="prefix">£</span><input type="number" id="groundrent" placeholder="0" min="0"></div>
+            <span class="field-hint">Leasehold properties only</span>
+          </div>
+        </div>
+
+        <div class="info-box" style="margin-top:20px">
+          <span class="icon">⚠️</span>
+          <span><strong>Credit card tip:</strong> Most lenders take your total outstanding balance and apply 3% as a monthly commitment — regardless of what you actually pay. For example, a £10,000 balance = £300/month factored in. Paying down balances before applying can significantly increase your borrowing power.</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(0)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(2)">Next: Dependants →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ STEP 3: DEPENDANTS ══════════════════ -->
+  <div class="step-panel" id="panel2">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">👨‍👩‍👧‍👦</div>
+        <div><h2>Dependants</h2><p>Children and other financial dependants in your household</p></div>
+      </div>
+      <div class="card-body">
+
+        <div class="info-box" style="margin-bottom:24px">
+          <span class="icon">ℹ️</span>
+          <span>Lenders apply a notional cost per dependant to your affordability assessment — typically <strong>£100–£300 per child per month</strong> as an assumed household cost, on top of any childcare costs already declared. This can reduce your maximum borrowing by <strong>£3,000–£5,000 per child</strong>.</span>
+        </div>
+
+        <div class="section-title"><span class="dot"></span> Children</div>
+        <div class="form-grid-3">
+          <div class="field">
+            <label>Children Under 5</label>
+            <div class="counter-wrap">
+              <button class="counter-btn" onclick="adj('dep0to4',-1)">−</button>
+              <div class="counter-display" id="dep0to4Display">0</div>
+              <button class="counter-btn" onclick="adj('dep0to4',1)">+</button>
+            </div>
+            <span class="field-hint">Highest cost — nursery age</span>
+          </div>
+          <div class="field">
+            <label>Children 5–11</label>
+            <div class="counter-wrap">
+              <button class="counter-btn" onclick="adj('dep5to11',-1)">−</button>
+              <div class="counter-display" id="dep5to11Display">0</div>
+              <button class="counter-btn" onclick="adj('dep5to11',1)">+</button>
+            </div>
+            <span class="field-hint">Primary school age</span>
+          </div>
+          <div class="field">
+            <label>Children 12–17</label>
+            <div class="counter-wrap">
+              <button class="counter-btn" onclick="adj('dep12to17',-1)">−</button>
+              <div class="counter-display" id="dep12to17Display">0</div>
+              <button class="counter-btn" onclick="adj('dep12to17',1)">+</button>
+            </div>
+            <span class="field-hint">Secondary school age</span>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:28px"><span class="dot"></span> Other Dependants</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Adult Dependants</label>
+            <div class="counter-wrap">
+              <button class="counter-btn" onclick="adj('depAdult',-1)">−</button>
+              <div class="counter-display" id="depAdultDisplay">0</div>
+              <button class="counter-btn" onclick="adj('depAdult',1)">+</button>
+            </div>
+            <span class="field-hint">Adults financially dependent on you (e.g. elderly relatives)</span>
+          </div>
+          <div class="field">
+            <label>Are you on maternity / paternity leave?</label>
+            <select id="maternityLeave">
+              <option value="no">No</option>
+              <option value="yes">Yes — returning to work</option>
+            </select>
+            <span class="field-hint">Most lenders use your return-to-work salary</span>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:28px"><span class="dot"></span> Lender Dependant Modelling</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Lender Model</label>
+            <select id="depModel">
+              <option value="standard">Standard (avg. £200/child/month)</option>
+              <option value="conservative">Conservative — Halifax/NatWest (£300/child)</option>
+              <option value="generous">Generous — some building societies (£150/child)</option>
+            </select>
+            <span class="field-hint">Different lenders apply different per-child costs</span>
+          </div>
+        </div>
+
+        <div class="info-box" style="margin-top:20px">
+          <span class="icon">💡</span>
+          <span><strong>Child Benefit:</strong> Most lenders accept Child Benefit as income, which can partially offset the dependant cost reduction. This is automatically factored into our calculation at £25.60/week for first child, £16.95/week for subsequent children (2025/26 rates).</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(3)">Next: Mortgage Details →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ STEP 4: MORTGAGE ══════════════════ -->
+  <div class="step-panel" id="panel3">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🏡</div>
+        <div><h2>Mortgage Details</h2><p>Your deposit, term and repayment preferences</p></div>
+      </div>
+      <div class="card-body">
+
+        <div class="section-title"><span class="dot"></span> Property & Deposit</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Target Property Value</label>
+            <div class="input-wrap"><span class="prefix">£</span><input type="number" id="propValue" placeholder="300,000" min="0"></div>
+          </div>
+          <div class="field">
+            <label>Deposit Available</label>
+            <div class="input-wrap"><span class="prefix">£</span><input type="number" id="deposit" placeholder="30,000" min="0"></div>
+            <span class="field-hint">A larger deposit = better rates &amp; lower LTV</span>
+            <span id="depositWarning" style="display:none;color:#c0392b;font-size:11px;font-weight:600;margin-top:4px;">⚠️ Deposit cannot exceed property value</span>
+          </div>
+          <div class="field">
+            <label>Buyer Type</label>
+            <select id="buyerType">
+              <option value="ftb">First-Time Buyer</option>
+              <option value="mover">Home Mover</option>
+              <option value="remortgage">Remortgage</option>
+              <option value="btl">Buy-to-Let</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Property Location</label>
+            <select id="propLocation">
+              <option value="england">England</option>
+              <option value="scotland">Scotland</option>
+              <option value="wales">Wales</option>
+              <option value="ni">Northern Ireland</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:24px"><span class="dot"></span> Mortgage Preferences</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Mortgage Term (Years)</label>
+            <div class="input-wrap"><input type="number" class="no-prefix with-suffix" id="term" value="25" min="5" max="40"><span class="suffix">yrs</span></div>
+            <span class="field-hint">Most lenders up to 40 years. Term affects how much you pay monthly.</span>
+          </div>
+          <div class="field">
+            <label>Repayment Type</label>
+            <select id="repayType">
+              <option value="repayment">Capital & Interest (Repayment)</option>
+              <option value="interestonly">Interest Only</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Indicative Interest Rate
+              <span class="tooltip-wrap"><span class="tooltip-icon">?</span><span class="tooltip-text">Use the rate you're likely to be offered. Average 2-year fix is ~4.5%, 5-year fix ~4.9% in March 2026.</span></span>
+            </label>
+            <div class="input-wrap"><input type="number" class="no-prefix with-suffix" id="rate" value="4.5" step="0.1" min="0.1" max="15"><span class="suffix">%</span></div>
+          </div>
+          <div class="field">
+            <label>Fixed Rate Period</label>
+            <select id="fixedPeriod">
+              <option value="2">2-Year Fixed</option>
+              <option value="5" selected>5-Year Fixed</option>
+              <option value="10">10-Year Fixed</option>
+              <option value="tracker">Tracker / Variable</option>
+            </select>
+            <span class="field-hint">5yr+ fixed can improve affordability with some lenders</span>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:24px"><span class="dot"></span> Credit Profile</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Credit Score (Self-Assessed)</label>
+            <select id="creditScore">
+              <option value="excellent">Excellent — No missed payments, no CCJs</option>
+              <option value="good" selected>Good — Minor issues, 1–2 late payments</option>
+              <option value="fair">Fair — Some defaults, satisfied CCJs</option>
+              <option value="poor">Poor — Recent defaults / CCJs / IVA</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Professional / High-Earner Boost?</label>
+            <select id="profession">
+              <option value="standard">Standard applicant</option>
+              <option value="professional">Professional (Doctor, Lawyer, Accountant, Vet)</option>
+              <option value="highearner">High Earner (£75k+ single / £100k+ joint)</option>
+            </select>
+            <span class="field-hint">Unlocks higher income multiples with select lenders</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(2)">← Back</button>
+      <button class="btn btn-gold" onclick="goToGate()">✦ Calculate My Affordability</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════ GATE: EMAIL CAPTURE ══════════════════ -->
+  <div class="step-panel" id="panel5">
+    <div class="lead-magnet" style="margin-bottom:0">
+      <div class="lead-magnet-badge">FREE PERSONALISED REPORT</div>
+      <div class="lead-magnet-inner">
+        <div class="lead-left">
+          <h3 class="lead-title">Your results are ready — enter your email to unlock them</h3>
+          <p class="lead-sub">Get your full affordability breakdown, lender comparison, stress test and a branded PDF report — all free, no obligation.</p>
+          <ul class="lead-bullets">
+            <li>✦ Maximum borrowing across 8 lenders</li>
+            <li>✦ Monthly repayment & stress test</li>
+            <li>✦ Capital vs interest breakdown</li>
+            <li>✦ Downloadable PDF report</li>
+          </ul>
+        </div>
+        <div class="lead-right">
+          <div id="gateForm">
+            <div class="lead-field">
+              <label class="lead-label">Full Name <span style="color:var(--gold)">*</span></label>
+              <input type="text" id="gateName" class="lead-input" placeholder="e.g. James Smith">
+            </div>
+            <div class="lead-field">
+              <label class="lead-label">Email Address <span style="color:var(--gold)">*</span></label>
+              <input type="email" id="gateEmail" class="lead-input" placeholder="your@email.com">
+            </div>
+            <div class="lead-consent">
+              <label class="consent-row">
+                <input type="checkbox" id="gateConsent">
+                <span>I agree to receive mortgage guidance and updates from ESN Financial Services. You can unsubscribe at any time.</span>
+              </label>
+            </div>
+            <div id="gateError" class="lead-error" style="display:none"></div>
+            <button class="btn-lead" onclick="unlockResults()">
+              Unlock My Results & Download Report →
+            </button>
+            <p class="lead-privacy">🔒 We only store your email. No spam, ever.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-row" style="justify-content:flex-start; margin-top:16px;">
+      <button class="btn btn-secondary" onclick="goTo(3)">← Adjust Details</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ STEP 5: RESULTS ══════════════════ -->
+  <div class="step-panel" id="panel4">
+
+    <!-- HERO -->
+    <div class="result-hero">
+      <div class="result-hero-label">Estimated Maximum Borrowing</div>
+      <div class="result-hero-amount" id="heroAmount">£0</div>
+      <div class="result-hero-sub">Based on your income, commitments and typical lender criteria</div>
+      <div class="result-hero-range">
+        <div class="range-item"><div class="range-label">Conservative</div><div class="range-val" id="rangeMin">£0</div></div>
+        <div style="width:1px; background:rgba(255,255,255,0.15); margin:0 4px;"></div>
+        <div class="range-item"><div class="range-label">Standard</div><div class="range-val" id="rangeMid">£0</div></div>
+        <div style="width:1px; background:rgba(255,255,255,0.15); margin:0 4px;"></div>
+        <div class="range-item"><div class="range-label">Best Case</div><div class="range-val" id="rangeMax">£0</div></div>
+      </div>
+    </div>
+
+    <!-- KEY METRICS -->
+    <div class="results-grid">
+      <div class="metric-card">
+        <div class="metric-label">Monthly Repayment</div>
+        <div class="metric-value green" id="monthlyPayment">£0</div>
+        <div class="metric-sub" id="monthlyPaymentSub">Based on your preferred rate & term</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Loan-to-Value (LTV)</div>
+        <div class="metric-value" id="ltvValue">0%</div>
+        <div class="metric-sub" id="ltvNote">—</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Net Disposable Income</div>
+        <div class="metric-value gold" id="ndi">£0/mo</div>
+        <div class="metric-sub">After mortgage & all committed outgoings</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Income Multiple Used</div>
+        <div class="metric-value" id="incMultiple">0x</div>
+        <div class="metric-sub" id="incMultipleNote">—</div>
+      </div>
+    </div>
+
+    <!-- INCOME BREAKDOWN -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📊</div>
+        <div><h2>Affordability Breakdown</h2><p>How we arrived at your figure</p></div>
+      </div>
+      <div class="card-body">
+        <div class="breakdown-list" id="breakdownList"></div>
+      </div>
+    </div>
+
+    <!-- LENDER COMPARISON -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🏦</div>
+        <div><h2>Lender Comparison</h2><p>Estimated maximum from major UK lenders based on your profile</p></div>
+      </div>
+      <div class="card-body">
+        <div class="lender-grid" id="lenderGrid"></div>
+        <div class="info-box" style="margin-top:16px">
+          <span class="icon">⚠️</span>
+          <span>These are estimates based on published income multiples and criteria. Actual offers depend on full affordability assessment, credit checks, and individual lender underwriting decisions. Figures assume a clean credit profile unless otherwise noted.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STRESS TEST -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📈</div>
+        <div><h2>Interest Rate Stress Test</h2><p>Can you afford repayments if rates rise? (FCA MCOB requirement)</p></div>
+      </div>
+      <div class="card-body">
+        <div id="stressResults"></div>
+      </div>
+    </div>
+
+    <!-- STAMP DUTY -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🧾</div>
+        <div><h2>Stamp Duty (SDLT)</h2><p>Estimated stamp duty on your target property</p></div>
+      </div>
+      <div class="card-body">
+        <div id="sdltResult"></div>
+      </div>
+    </div>
+
+    <!-- CAPITAL vs INTEREST BREAKDOWN -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🥧</div>
+        <div><h2>Capital vs Interest Breakdown</h2><p>How much of the total repaid goes to the bank vs reducing your debt</p></div>
+      </div>
+      <div class="card-body">
+        <div class="repay-split">
+          <div class="donut-wrap">
+            <div class="donut-svg" style="position:relative; width:200px; height:200px;">
+              <svg id="donutSvg" viewBox="0 0 200 200" width="200" height="200"></svg>
+              <div class="donut-center">
+                <div class="donut-center-val" id="donutTotal">£0</div>
+                <div class="donut-center-label">Total<br>Repaid</div>
+              </div>
+            </div>
+            <div class="donut-legend" id="donutLegend"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px;justify-content:center;">
+            <div class="metric-card">
+              <div class="metric-label">Total Capital Repaid</div>
+              <div class="metric-value green" id="totalCapital">£0</div>
+              <div class="metric-sub">Your actual loan amount</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Total Interest Paid</div>
+              <div class="metric-value gold" id="totalInterest">£0</div>
+              <div class="metric-sub" id="interestPct">—</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Cost Per £1 Borrowed</div>
+              <div class="metric-value" id="costPerPound">£0</div>
+              <div class="metric-sub">Total interest cost ratio</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OVERPAYMENT CALCULATOR -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">💰</div>
+        <div><h2>Overpayment Calculator</h2><p>See how much time and money you could save by paying more each month</p></div>
+      </div>
+      <div class="card-body">
+        <div class="op-controls">
+          <div class="slider-field">
+            <label>Monthly Overpayment <span class="slider-val" id="opAmountLabel">£0/mo</span></label>
+            <input type="range" id="opSlider" min="0" max="2000" step="25" value="0" oninput="updateOverpayment()">
+          </div>
+        </div>
+
+        <div class="op-savings-grid" style="margin-top:20px">
+          <div class="op-saving-box">
+            <div class="op-saving-label">Interest Saved</div>
+            <div class="op-saving-val" id="opInterestSaved">£0</div>
+          </div>
+          <div class="op-saving-box">
+            <div class="op-saving-label">Years Saved</div>
+            <div class="op-saving-val" id="opYearsSaved">0 yrs</div>
+          </div>
+          <div class="op-saving-box highlight">
+            <div class="op-saving-label">New Term</div>
+            <div class="op-saving-val" id="opNewTerm">—</div>
+          </div>
+          <div class="op-saving-box">
+            <div class="op-saving-label">New Monthly Total</div>
+            <div class="op-saving-val" id="opNewMonthly">£0</div>
+          </div>
+          <div class="op-saving-box">
+            <div class="op-saving-label">Mortgage Free By</div>
+            <div class="op-saving-val" id="opFreeYear">—</div>
+          </div>
+          <div class="op-saving-box">
+            <div class="op-saving-label">Total Repaid</div>
+            <div class="op-saving-val" id="opTotalRepaid">£0</div>
+          </div>
+        </div>
+
+        <div style="margin-top:28px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-family:'Poppins', sans-serif;font-size:15px;font-weight:600;color:var(--text-dark)">Outstanding Balance Over Time</div>
+            <div style="display:flex;gap:16px;font-size:12px;color:var(--text-mid)">
+              <span><span style="display:inline-block;width:12px;height:3px;background:var(--green);border-radius:2px;vertical-align:middle;margin-right:4px"></span>Without overpayment</span>
+              <span><span style="display:inline-block;width:12px;height:3px;background:var(--gold);border-radius:2px;vertical-align:middle;margin-right:4px"></span>With overpayment</span>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="opChart"></canvas>
+          </div>
+        </div>
+
+        <div class="info-box" style="margin-top:16px">
+          <span class="icon">💡</span>
+          <span>Most lenders allow overpayments of up to <strong>10% of your outstanding balance per year</strong> without early repayment charges. Always check your mortgage terms before overpaying.</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- CTA -->
+
+
+    <div class="nav-row" style="justify-content:flex-start; margin-top:20px;">
+      <button class="btn btn-secondary" onclick="goTo(3)">← Adjust Details</button>
+      <button class="btn btn-secondary" onclick="resetCalc()">↺ Start Again</button>
+    </div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<div class="legal">
+  <strong>ESN Financial Services</strong> — This calculator is for illustrative purposes only and does not constitute financial advice or a mortgage offer.
+  Results are estimates based on typical UK lender criteria and may not reflect every lender's assessment. Your actual borrowing capacity will depend on a full affordability assessment including credit checks, employment verification, and individual lender criteria.
+  Mortgage lending is subject to status. Your home may be repossessed if you do not keep up repayments on a mortgage or any other debt secured on it.
+  ESN Financial Services is directly authorised and regulated by the Financial Conduct Authority.
+</div>
+
+
+</body>
+</html>
